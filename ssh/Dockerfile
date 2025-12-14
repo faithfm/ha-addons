@@ -51,6 +51,7 @@ RUN \
         mariadb-client=11.4.8-r0 \
         mosh=1.4.0-r14 \
         mosquitto-clients=2.0.21-r0 \
+        mpc=0.35-r0 \
         nano-syntax=8.4-r0 \
         nano=8.4-r0 \
         ncurses=6.5_p20250503-r0 \
@@ -60,7 +61,6 @@ RUN \
         openssl=3.5.4-r0 \
         procps-ng=4.0.4-r3 \
         pwgen=2.08-r3 \
-        pulseaudio-utils=17.0-r5 \
         py3-pip=25.1.1-r0 \
         python3=3.12.12-r0 \
         rsync=3.4.1-r1 \
