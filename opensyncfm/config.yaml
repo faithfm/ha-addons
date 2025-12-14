@@ -1,0 +1,40 @@
+name: "OpenSync FM"
+version: "latest"            # must match the image tag when using `image:`  [oai_citation:3‡developers.home-assistant.io](https://developers.home-assistant.io/docs/add-ons/configuration/?utm_source=chatgpt.com)
+slug: "opensyncfm"
+description: "Faith FM OpenSyncFM radio playout system"
+url: "https://github.com/faithfm/OpenSyncFM"
+arch:
+  - aarch64                    # add armv7/amd64 once your image supports them
+
+startup: application
+init: false                  # we’re using the image’s own entrypoint, not HA’s base image  [oai_citation:4‡Home Assistant Community](https://community.home-assistant.io/t/ability-to-configure-container-target-path-for-custom-addon-such-as-wordpress/635615)
+
+# Networking: `-p 4000:4000`
+ports:
+  "4000/tcp": 4000
+ports_description:
+  "4000/tcp": "OpenSyncFM web UI"
+webui: "http://[HOST]:[PORT:4000]/dashboard"    # temporary (until ingress mode can be enabled)
+
+# Ingress mode requires relative-vs-absolute URLS.  Need to fix OpenSync FM first then come back here later.
+# ingress: true
+# ingress_port: 4000
+# panel_icon: mdi:pulse
+
+
+# Persistent storage: map HA’s add-on data dir to /app/storage
+# This uses the new `data` map type with a custom target path.  [oai_citation:5‡GitHub](https://github.com/home-assistant/developers.home-assistant/pull/1974)
+map:
+  - type: data
+    path: /app/storage
+    read_only: false
+
+# Audio device: equivalent of docker's `--device /dev/snd`
+raw_devices:
+  - "/dev/snd:/dev/snd"
+
+# Use your existing Docker image
+image: "docker.io/faithfm/opensyncfm"
+
+full_access: true
+apparmor: false
