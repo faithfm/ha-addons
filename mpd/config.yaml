@@ -1,9 +1,9 @@
-name: MPD
-version: dev
+name: MPD (FFM)
+version: 1.8.2.1
 slug: mpd
 panel_icon: mdi:music-circle
-description: Music Player Daemon is a free and open source music player. It plays audio files, organizes playlists and maintains a music database
-url: https://github.com/Poeschl-HomeAssistant-Addons/mpd
+description: A clone of Poeschl's MPD add-on - with audio disabled... and other features for Faith FM development.
+url: https://github.com/faithfm/ha-addons
 ingress: true
 ingress_port: 6680
 arch:
@@ -12,11 +12,17 @@ arch:
   - aarch64
   - amd64
   - i386
-image: ghcr.io/poeschl-homeassistant-addons/mpd-{arch}
+# image: ghcr.io/poeschl-homeassistant-addons/mpd-{arch}
 init: false
-audio: true
-devices:
-  - /dev/snd
+
+# The following settings are required to work with our audio-plugin-disabled custom version of the HA supervisor.
+# Note: our custom supervisor disables the default Pulseaudio system, and instead provides a raw_devices mapping to allow raw ALSA audio devices to be passed through to the container.
+audio: false              # Disable default Pulseaudio system
+raw_devices:
+  - "/dev/snd:/dev/snd"   # Equivalent to docker `--device /dev/snd`
+full_access: true         # Required for raw_devices to work
+apparmor: false           # TODO:may be possible to tweak with more fine-grained access control instead of disabling apparmor completely
+
 map:
   - share:rw
   - media:rw
@@ -26,7 +32,7 @@ ports:
   8000/tcp: null
 ports_description:
   6680/tcp: Web Frontend (Not needed with ingress feature)
-  6600/tcp: MDP Connection
+  6600/tcp: MPD Connection
   8000/tcp: HTTPd Connection (if enabled)
 options:
   media_folder: /media/mpd/media
